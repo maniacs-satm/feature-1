@@ -78,5 +78,45 @@ describe Feature::RedisBackend do
       subject.enabled?(:foo, true).should be_false
     end
   end
-end
 
+  describe "#new_group" do
+    it "adds the values to the group set" do
+      subject.new_group('admin', 'a', 'c', 'r')
+
+      group_members = redis.smembers(subject.group_key('admin'))
+      group_members.size.should == 3
+      group_members.should include('a', 'c', 'r')
+    end
+
+    it "deletes the previous group" do
+      subject.new_group('admin', 'a')
+      subject.new_group('admin', 'b')
+
+      redis.smembers(subject.group_key('admin')).should_not include('a')
+    end
+  end
+
+  describe "#group_key" do
+    it "prefixes the redis key with 'group:'" do
+      subject.group_key('admin').should start_with('group:')
+    end
+  end
+
+  describe "#in_group?" do
+    it "returns false if the group is not defined" do
+      subject.in_group?('admin', '1').should be_false
+    end
+
+    it "returns false if is not the group" do
+      subject.new_group('admin', '1')
+
+      subject.in_group?('admin', '2').should be_false
+    end
+
+    it "returns true if is in the group" do
+      subject.new_group('admin', '1')
+
+      subject.in_group?('admin', '1').should be_true
+    end
+  end
+end
