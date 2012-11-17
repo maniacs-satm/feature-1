@@ -31,6 +31,7 @@ class Feature::RedisBackend
   end
 
   def reset!
+    # TODO use of KEYS command is recommended only for debugging. Refactor.
     keys = @redis.keys
     @redis.del(*keys) unless keys.empty?
   end
