@@ -31,6 +31,12 @@ describe Feature::Config do
       subject.backend backend
       subject.backend_obj.should == backend
     end
+
+    it "raises an error if a feature is given a group that does not exist" do
+      expect {
+        subject.feature :foo, groups: :employees
+      }.to raise_error
+    end
   end
 
   describe "#group" do

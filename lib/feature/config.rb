@@ -16,6 +16,11 @@ class Feature::Config
   # Config DSL method for defining a new feature
   def feature(name, opts = {})
     raise "Feature '#{name}' already exists" if @features.include?(name)
+
+    opts[:groups] && opts[:groups].each do |group|
+      raise "Group '#{group}' does not exist" unless @groups.include?(group)
+    end
+
     opts[:default] = true unless opts.include?(:default)
     @features[name] = opts
   end
