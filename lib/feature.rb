@@ -5,19 +5,21 @@ module Feature
   # Check if the given feature is enabled. If it hasn't been set explicitly,
   # it will fall back to the default provided in the config. If no default was
   # provided, it will return true.
-  def self.enabled?(feature_name)
+  def self.enabled?(feature_name, opts= {})
     check_feature_defined(feature_name)
+
     feature_opts = @features[feature_name]
-    backend.enabled?(feature_name, feature_opts[:default])
+    feature_opts = feature_opts.merge(value: opts[:for]) if opts[:for]
+    backend.enabled?(feature_name, feature_opts)
   end
 
-  # Enable the given feature.
+  # Enable the given feature globally.
   def self.enable(feature_name)
     check_feature_defined(feature_name)
     backend.enable(feature_name)
   end
 
-  # Disable the given feature.
+  # Disable the given feature globally.
   def self.disable(feature_name)
     check_feature_defined(feature_name)
     backend.disable(feature_name)
