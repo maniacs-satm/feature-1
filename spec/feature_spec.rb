@@ -22,8 +22,14 @@ describe Feature do
 
     describe ".enabled?" do
       it "delegates the decision to the selected backend" do
-        described_class.backend.expects(:enabled?).with(:foo, true)
+        described_class.backend.expects(:enabled?).with(:foo, default: true)
         described_class.enabled?(:foo)
+      end
+
+      it "passes the object which the decision should be based on" do
+        described_class.backend.expects(:enabled?).
+          with(:foo, has_entry(:value, 'bar'))
+        described_class.enabled?(:foo, for: 'bar')
       end
     end
 
