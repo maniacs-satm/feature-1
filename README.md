@@ -30,9 +30,9 @@ disabled.
 Feature.configure do
   backend Feature::RedisBackend.new(...)
 
-  group :employees, values: %w(id1, id4, id7)
+  group :employees, values: %w(id1 id4 id7)
 
-  group :beta_users, values: %w(id8, id10, id15)
+  group :beta_users, values: %w(id8 id10 id15)
 
   feature :sepa_payments, default: false, groups: %w(beta_users employees)
 end
