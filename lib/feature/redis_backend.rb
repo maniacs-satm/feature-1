@@ -56,6 +56,14 @@ class Feature::RedisBackend
     @redis.del(group_key(name))
   end
 
+  def add_to_group(name, value)
+    @redis.sadd(group_key(name), value)
+  end
+
+  def remove_from_group(name, value)
+    @redis.srem(group_key(name), value)
+  end
+
   # Checks if the given value is part of the group
   def in_group?(name, value)
     @redis.sismember(group_key(name), value)

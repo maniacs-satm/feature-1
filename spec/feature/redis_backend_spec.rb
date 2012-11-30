@@ -123,6 +123,26 @@ describe Feature::RedisBackend do
     end
   end
 
+  describe "#add_to_group" do
+    it "adds a value to the group set" do
+
+      subject.new_group('admin', ['a'])
+
+      subject.add_to_group('admin', 'b')
+      redis.smembers(subject.group_key('admin')).should include('a', 'b')
+    end
+  end
+
+  describe "#remove_to_group" do
+    it "removes a value from the group set" do
+
+      subject.new_group('admin', ['a', 'b'])
+
+      subject.remove_from_group('admin', 'b')
+      redis.smembers(subject.group_key('admin')).should == ['a']
+    end
+  end
+
   describe "#group_key" do
     it "prefixes the redis key with 'group:'" do
       subject.group_key('admin').should start_with('group:')
