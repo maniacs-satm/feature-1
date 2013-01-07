@@ -25,13 +25,6 @@ class Feature::Config
     @features[name] = opts
   end
 
-  def group(name, opts = {})
-    values = opts.delete(:values) || []
-
-    @groups << name
-    @backend_obj.new_group(name, values)
-  end
-
   def backend(backend)
     @backend_obj = backend
   end
