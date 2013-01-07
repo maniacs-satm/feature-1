@@ -40,17 +40,6 @@ class Feature::RedisBackend
 
   # Groups functionality
 
-  # Defines a new group and initializes it with a set of values. Clears previous
-  # values if group existed previously.
-  #
-  # TODO come up with a better way to avoid clashes between feature and group
-  # key names.
-  def new_group(name, values)
-    delete_group(name)
-
-    values.each {|value| @redis.sadd(group_key(name), value) }
-  end
-
   # Deletes a group.
   def delete_group(name)
     @redis.del(group_key(name))

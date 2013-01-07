@@ -38,24 +38,4 @@ describe Feature::Config do
       }.to raise_error
     end
   end
-
-  describe "#group" do
-    it "adds the group to the group definitions list" do
-      backend = stub('backend', :new_group)
-
-      subject.backend backend
-
-      subject.group('admin', values: [1, 2, 3])
-      subject.groups.should include('admin')
-    end
-
-    it "initializes the group in the backend" do
-      backend = mock('backend')
-      backend.expects(:new_group).with('admin', [1, 2, 3])
-
-      subject.backend backend
-
-      subject.group('admin', values: [1, 2, 3])
-    end
-  end
 end
