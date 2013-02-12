@@ -13,13 +13,13 @@ class Feature::RedisBackend
   # membership will be checked.
   def enabled?(feature, opts)
     global_setting = check_global_value(feature, default: opts[:default])
-    enabled_groups = opts.fetch(:enabled_groups, [])
+    groups = opts.fetch(:groups, [])
 
     # Return the global setting if its set to true, or if the there are no
     # groups configured for the feature.
-    return global_setting if global_setting || enabled_groups.empty?
+    return global_setting if global_setting || groups.empty?
 
-    opts[:enabled_groups].any? { |group| in_group?(group, opts[:value]) }
+    groups.any? { |group| in_group?(group, opts[:value]) }
   end
 
   # Globally enable a feature
@@ -40,20 +40,17 @@ class Feature::RedisBackend
 
   # Groups functionality
 
-  # Defines a new group and initializes it with a set of values. Clears previous
-  # values if group existed previously.
-  #
-  # TODO come up with a better way to avoid clashes between feature and group
-  # key names.
-  def new_group(name, *values)
-    delete_group(name)
-
-    values.each {|value| @redis.sadd(group_key(name), value) }
-  end
-
   # Deletes a group.
   def delete_group(name)
     @redis.del(group_key(name))
+  end
+
+  def add_to_group(name, value)
+    @redis.sadd(group_key(name), value)
+  end
+
+  def remove_from_group(name, value)
+    @redis.srem(group_key(name), value)
   end
 
   # Checks if the given value is part of the group

@@ -25,6 +25,30 @@ module Feature
     backend.disable(feature_name)
   end
 
+  # Ads a value to be part of a group. This is useful at runtime to avoid having
+  # to restart the application just to enable / disable a feature for a given
+  # user.
+  #
+  # Pass an instance of String that the backend will store
+  #
+  # Note that groups are overriden at application restart so make sure to edit
+  # your config if you want the changes to be permanent.
+  def self.add_to_group(name, value)
+    backend.add_to_group(name, value)
+  end
+
+  # Removes a value from a group. This is useful at runtime to avoid having
+  # to restart the application just to enable / disable a feature for a given
+  # user.
+  #
+  # Pass an instance of String that the backend will delete from the group
+  #
+  # Note that groups are overriden at application restart so make sure to edit
+  # your config if you want the changes to be permanent.
+  def self.remove_from_group(name, value)
+    backend.remove_from_group(name, value)
+  end
+
   # Pass a block to configure, calling 'feature' for each feature you want to
   # define.
   #

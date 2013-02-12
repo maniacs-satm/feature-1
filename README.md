@@ -30,9 +30,9 @@ disabled.
 Feature.configure do
   backend Feature::RedisBackend.new(...)
 
-  group :employees, values: %w(id1, id4, id7)
+  group :employees, values: %w(id1 id4 id7)
 
-  group :beta_users, values: %w(id8, id10, id15)
+  group :beta_users, values: %w(id8 id10 id15)
 
   feature :sepa_payments, default: false, groups: %w(beta_users employees)
 end
@@ -63,4 +63,16 @@ Feature.enabled? :sepa_payments  # => true
 Feature.disable :sepa_payments
 Feature.enabled? :sepa_payments  # => false
 ```
+### Changing Groups membership during runtime
 
+It is possible to change a group membership state during runtime.
+
+Examples from a Ruby irb session:
+
+```ruby
+# Add user to the 'employees' group
+Feature.add_to_group(:employees, user.id)
+
+# Remove user from the 'employees' group
+Feature.remove_from_group(:employees, user.id)
+```

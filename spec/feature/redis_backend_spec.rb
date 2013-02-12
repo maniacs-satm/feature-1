@@ -56,7 +56,7 @@ describe Feature::RedisBackend do
       it "returns true if globally enabled (regardless of the groups)" do
         redis.set('foo', 'enabled')
 
-        result = subject.enabled?(:foo, enabled_groups: [:employees],
+        result = subject.enabled?(:foo, groups: [:employees],
                                         value: 'alan')
         result.should be_true
       end
@@ -65,14 +65,14 @@ describe Feature::RedisBackend do
         before { redis.set('foo', 'disabled') }
 
         it "returns true if enabled at least in one of the groups" do
-          subject.new_group('employees', 'alan')
-          result = subject.enabled?(:foo, enabled_groups: [:employees, :beta],
+          subject.add_to_group('employees', 'alan')
+          result = subject.enabled?(:foo, groups: [:employees, :beta],
                                           value: 'alan')
           result.should be_true
         end
 
         it "returns false if not enabled in any of the groups" do
-          result = subject.enabled?(:foo, enabled_groups: [:employees, :beta],
+          result = subject.enabled?(:foo, groups: [:employees, :beta],
                                           value: 'alan')
           result.should be_false
         end
@@ -106,20 +106,24 @@ describe Feature::RedisBackend do
     end
   end
 
-  describe "#new_group" do
-    it "adds the values to the group set" do
-      subject.new_group('admin', 'a', 'c', 'r')
+  describe "#add_to_group" do
+    it "adds a value to the group set" do
 
-      group_members = redis.smembers(subject.group_key('admin'))
-      group_members.size.should == 3
-      group_members.should include('a', 'c', 'r')
+      subject.add_to_group('admin', 'a')
+      subject.add_to_group('admin', 'b')
+
+      redis.smembers(subject.group_key('admin')).should include('a', 'b')
     end
+  end
 
-    it "deletes the previous group" do
-      subject.new_group('admin', 'a')
-      subject.new_group('admin', 'b')
+  describe "#remove_to_group" do
+    it "removes a value from the group set" do
 
-      redis.smembers(subject.group_key('admin')).should_not include('a')
+      subject.add_to_group('admin', 'a')
+      subject.add_to_group('admin', 'b')
+
+      subject.remove_from_group('admin', 'b')
+      redis.smembers(subject.group_key('admin')).should == ['a']
     end
   end
 
@@ -135,13 +139,13 @@ describe Feature::RedisBackend do
     end
 
     it "returns false if is not the group" do
-      subject.new_group('admin', '1')
+      subject.add_to_group('admin', '1')
 
       subject.in_group?('admin', '2').should be_false
     end
 
     it "returns true if is in the group" do
-      subject.new_group('admin', '1')
+      subject.add_to_group('admin', '1')
 
       subject.in_group?('admin', '1').should be_true
     end

@@ -66,6 +66,20 @@ describe Feature do
         described_class.features.should include(foo: {default: true})
       end
     end
+
+    describe ".add_to_group" do
+      it "delegates to the selected backend" do
+        described_class.backend.expects(:add_to_group).with(:foo, :bar)
+        described_class.add_to_group(:foo, :bar)
+      end
+    end
+
+    describe ".remove_from_group" do
+      it "delegates to the selected backend" do
+        described_class.backend.expects(:remove_from_group).with(:foo, :bar)
+        described_class.remove_from_group(:foo, :bar)
+      end
+    end
   end
 end
 
