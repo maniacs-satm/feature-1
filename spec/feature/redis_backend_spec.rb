@@ -100,6 +100,16 @@ describe Feature::RedisBackend do
     end
   end
 
+  describe "#group_members" do
+    it "returns all the members of a group" do
+      subject.add_to_group('admin', 'a')
+      subject.add_to_group('admin', 'b')
+
+      subject.group_members('admin').should include('a')
+      subject.group_members('admin').should include('b')
+    end
+  end
+
   describe "#group_key" do
     it "prefixes the redis key with 'group:'" do
       subject.group_key('admin').should start_with('group:')
