@@ -36,6 +36,12 @@ class Feature::RedisBackend
 
   # Groups functionality
 
+  # Returns all the groups
+  def groups
+    group_names = @redis.smembers('groups')
+    group_names.map{ |name| Feature::Group.new(name, self) }
+  end
+
   def group_members(name)
     @redis.smembers(group_key(name))
   end
@@ -46,6 +52,7 @@ class Feature::RedisBackend
   end
 
   def add_to_group(name, value)
+    @redis.sadd('groups', name)
     @redis.sadd(group_key(name), value)
   end
 

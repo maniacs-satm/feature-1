@@ -87,6 +87,11 @@ describe Feature::RedisBackend do
 
       redis.smembers(subject.group_key('admin')).should include('a', 'b')
     end
+
+    it "adds the group to the groups set" do
+      subject.add_to_group('admin', 'a')
+      redis.smembers('groups').should include('admin')
+    end
   end
 
   describe "#remove_to_group" do
@@ -107,6 +112,19 @@ describe Feature::RedisBackend do
 
       subject.group_members('admin').should include('a')
       subject.group_members('admin').should include('b')
+    end
+  end
+
+  describe "#groups" do
+    it "returns a collection of group objects" do
+      subject.add_to_group('admin', 'a')
+      subject.add_to_group('staff', 'b')
+
+      groups = subject.groups
+
+      groups.size.should == 2
+      groups.find{|g| g.name == 'admin'}.should_not be_nil
+      groups.find{|g| g.name == 'staff'}.should_not be_nil
     end
   end
 
