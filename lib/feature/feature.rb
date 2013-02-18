@@ -16,8 +16,18 @@ class Feature::Feature
     set_groups(groups)
   end
 
+  # Returns the members that have this feature enabled.
+  # - It returns `:all` if globally enabled
+  # - A list of all the members of each group
+  # - `:all` if enabled by default or an empty collection otherwise.
   def members
-    # TODO return all members in this feature
+    return :all if backend.globally_enabled?(name)
+
+    if groups.any?
+      return groups.map {|group| group.members}.flatten(1).uniq
+    end
+
+    default ? :all : []
   end
 
   # Enable the given feature globally.

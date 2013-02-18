@@ -113,4 +113,46 @@ describe Feature::Feature do
       end
     end
   end
+
+  describe "#members" do
+    it "returns ':all' if globally enabled" do
+      feature = described_class.new(:foo, backend)
+
+      backend.expects(:globally_enabled?).
+        with(feature.name).
+        returns(true)
+
+      feature.members.should == :all
+    end
+
+    context "when not globally enabled and groups" do
+      let(:feature) { described_class.new(:foo, backend, groups: [:g1, :g2]) }
+
+      before { backend.stubs(:globally_enabled?).returns(false) }
+
+      it "returns the members of all the groups" do
+        Feature::Group.any_instance.stubs(:members).
+          returns([:a, :b]).returns([:b, :c])
+        members = feature.members
+        members.size.should == 3
+        members.should include(:a, :b, :c)
+      end
+    end
+
+    context "when not globally enabled and no groups" do
+      let (:feature) { described_class.new(:foo, backend) }
+
+      before { backend.stubs(:globally_enabled?).returns(false) }
+
+      it "returns ':all' if enabled by default" do
+        feature.expects(:default).returns(true)
+        feature.members.should == :all
+      end
+
+      it "returns an empty collection if disabled by default" do
+        feature.expects(:default).returns(false)
+        feature.members.should be_empty
+      end
+    end
+  end
 end
