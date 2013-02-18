@@ -16,4 +16,16 @@ describe Feature::Feature do
       feature.groups.first.name.should == :group1
     end
   end
+
+  describe "#default" do
+    it "is true when not configured" do
+      feature = described_class.new(:foo, backend)
+      feature.default.should be_true
+    end
+
+    it "can be configured to other values" do
+      feature = described_class.new(:foo, backend, { default: false })
+      feature.default.should be_false
+    end
+  end
 end

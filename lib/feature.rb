@@ -49,6 +49,11 @@ module Feature
     backend.remove_from_group(name, value)
   end
 
+  # Returns all defined groups
+  def groups
+    backend.groups
+  end
+
   # Pass a block to configure, calling 'feature' for each feature you want to
   # define.
   #
