@@ -20,29 +20,34 @@ describe Feature do
       end
     end
 
+    let(:feature_obj) { described_class.features.first }
+    let(:response) { stub }
+
     describe ".enabled?" do
-      it "delegates the decision to the selected backend" do
-        described_class.backend.expects(:enabled?).with(:foo, default: true)
-        described_class.enabled?(:foo)
+      it "delegates the decision to the feature object" do
+        opts = {}
+        feature_obj.expects(:enabled?).with(opts).returns(response)
+
+        described_class.enabled?(:foo).should == response
       end
 
       it "passes the object which the decision should be based on" do
-        described_class.backend.expects(:enabled?).
-          with(:foo, has_entry(:value, 'bar'))
+        feature_obj.expects(:enabled?).
+          with(has_entry(:for, 'bar'))
         described_class.enabled?(:foo, for: 'bar')
       end
     end
 
     describe ".enable" do
       it "delegates to the selected backend" do
-        described_class.backend.expects(:enable).with(:foo)
+        feature_obj.expects(:enable)
         described_class.enable(:foo)
       end
     end
 
     describe ".disable" do
       it "delegates to the selected backend" do
-        described_class.backend.expects(:disable).with(:foo)
+        feature_obj.expects(:disable)
         described_class.disable(:foo)
       end
     end
@@ -62,22 +67,40 @@ describe Feature do
     end
 
     describe ".features" do
-      it "returns the feature definition hash" do
-        described_class.features.should include(foo: {default: true})
+      it "returns the collection of feature objects" do
+        described_class.features.first.should be_instance_of(Feature::Feature)
+        described_class.features.first.name.should == :foo
       end
     end
 
-    describe ".add_to_group" do
-      it "delegates to the selected backend" do
-        described_class.backend.expects(:add_to_group).with(:foo, :bar)
-        described_class.add_to_group(:foo, :bar)
+    describe ".groups" do
+      it "returns the groups from the backend" do
+        groups = stub
+        described_class.backend.expects(:groups).returns(groups)
+        described_class.groups.should == groups
       end
     end
 
-    describe ".remove_from_group" do
-      it "delegates to the selected backend" do
-        described_class.backend.expects(:remove_from_group).with(:foo, :bar)
-        described_class.remove_from_group(:foo, :bar)
+
+    describe "group management" do
+      let(:group) { mock }
+
+      before do
+        Feature::Group.expects(:new).with(:foo, described_class.backend).returns(group)
+      end
+
+      describe ".add_to_group" do
+        it "delegates to the selected backend" do
+          group.expects(:add).with(:bar)
+          described_class.add_to_group(:foo, :bar)
+        end
+      end
+
+      describe ".remove_from_group" do
+        it "delegates to the selected backend" do
+          group.expects(:remove).with(:bar)
+          described_class.remove_from_group(:foo, :bar)
+        end
       end
     end
   end
