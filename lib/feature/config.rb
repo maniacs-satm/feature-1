@@ -1,11 +1,9 @@
-require 'set'
 require 'feature/feature'
 
 # Class for the Feature configuration DSL. Methods defined here are
 # available within the block passed to Feature.configure
 class Feature::Config
   attr_reader :features
-  attr_reader :groups
   attr_reader :backend_obj
 
   def initialize(block = nil)
