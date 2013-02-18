@@ -37,7 +37,7 @@ class Feature::RedisBackend
   # Groups functionality
 
   # Deletes a group.
-  def delete_group(name)
+  def clear_group(name)
     @redis.del(group_key(name))
   end
 
