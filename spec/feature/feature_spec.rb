@@ -84,8 +84,9 @@ describe Feature::Feature do
         before { backend.expects(:globally_enabled?).returns(false) }
 
         it "returns the default if not if in one of the groups" do
-          backend.expects(:group_enabled_for?).
-            with([:foo], :value).
+          Feature::Group.any_instance.
+            expects(:member?).
+            with(:value).
             returns(false)
 
           default = stub
@@ -95,7 +96,9 @@ describe Feature::Feature do
         end
 
         it "returns the default if there is no group value to check" do
-          backend.stubs(:group_enabled_for?).returns(true)
+          Feature::Group.any_instance.
+            stubs(:member?).
+            returns(true)
 
           default = stub
           feature.stubs(:default).returns(default)
@@ -104,8 +107,9 @@ describe Feature::Feature do
         end
 
         it "returns true if in one of the groups" do
-          backend.expects(:group_enabled_for?).
-            with([:foo], :value).
+          Feature::Group.any_instance.
+            expects(:member?).
+            with(:value).
             returns(true)
 
           feature.enabled?(for: :value).should be_true

@@ -50,8 +50,7 @@ class Feature::Feature
     return true if backend.globally_enabled?(name)
 
     if groups.any? && !!opts[:for]
-      group_names = groups.map{ |g| g.name }
-      return true if backend.group_enabled_for?(group_names, opts[:for])
+      return true if groups.any? {|g| g.member?(opts[:for]) }
     end
 
     default
