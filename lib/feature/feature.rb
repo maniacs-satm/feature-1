@@ -30,8 +30,19 @@ class Feature::Feature
     backend.disable(name)
   end
 
+  # Checks if the feature is enabled.
+  #
+  # Checks, in precedence order:
+  # - It first checks if the feature is on globally.
+  # - Check if the value given belongs to one of the groups
+  # - Return the default value
   def enabled?(opts = {})
-  end
+    return true if backend.globally_enabled?(name)
+
+    if groups.any? && !!opts[:for]
+      group_names = groups.map{ |g| g.name }
+      return true if backend.group_enabled_for?(group_names, opts[:for])
+    end
 
     default
   end

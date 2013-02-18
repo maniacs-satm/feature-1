@@ -44,4 +44,73 @@ describe Feature::Feature do
       feature.disable
     end
   end
+
+  describe "#enabled?" do
+    context "with no groups" do
+      let(:feature) { described_class.new(:foo, backend) }
+
+      it "returns true if globally enabled" do
+        backend.expects(:globally_enabled?).
+          with(feature.name).
+          returns(true)
+
+        feature.enabled?
+      end
+
+      it "returns the default otherwise" do
+        backend.expects(:globally_enabled?).
+          with(feature.name).
+          returns(false)
+
+        default = stub
+        feature.stubs(:default).returns(default)
+
+        feature.enabled?.should == default
+      end
+    end
+
+    context "with groups" do
+      let(:feature) { described_class.new(:foo, backend, groups: [:foo]) }
+
+      it "returns true if globally enabled" do
+        backend.expects(:globally_enabled?).
+          with(feature.name).
+          returns(true)
+
+        feature.enabled?(for: :value).should == true
+      end
+
+      context "and not globally enabled" do
+        before { backend.expects(:globally_enabled?).returns(false) }
+
+        it "returns the default if not if in one of the groups" do
+          backend.expects(:group_enabled_for?).
+            with([:foo], :value).
+            returns(false)
+
+          default = stub
+          feature.stubs(:default).returns(default)
+
+          feature.enabled?(for: :value).should == default
+        end
+
+        it "returns the default if there is no group value to check" do
+          backend.stubs(:group_enabled_for?).returns(true)
+
+          default = stub
+          feature.stubs(:default).returns(default)
+
+          feature.enabled?.should == default
+        end
+
+        it "returns true if in one of the groups" do
+          backend.expects(:group_enabled_for?).
+            with([:foo], :value).
+            returns(true)
+
+          feature.enabled?(for: :value).should be_true
+        end
+      end
+    end
+  end
 end
