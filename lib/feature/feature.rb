@@ -20,10 +20,14 @@ class Feature::Feature
     # TODO return all members in this feature
   end
 
+  # Enable the given feature globally.
   def enable
+    backend.enable(name)
   end
 
+  # Disable the given feature globally.
   def disable
+    backend.disable(name)
   end
 
   def enabled?(opts = {})

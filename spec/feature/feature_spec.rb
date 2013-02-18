@@ -28,4 +28,20 @@ describe Feature::Feature do
       feature.default.should be_false
     end
   end
+
+  describe "#enable" do
+    it "enables it through the backend" do
+      feature = described_class.new(:foo, backend)
+      feature.backend.expects(:enable).with(feature.name)
+      feature.enable
+    end
+  end
+
+  describe "#disable" do
+    it "enables it through the backend" do
+      feature = described_class.new(:foo, backend)
+      feature.backend.expects(:disable).with(feature.name)
+      feature.disable
+    end
+  end
 end
