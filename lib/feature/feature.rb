@@ -2,12 +2,15 @@ require 'set'
 require 'feature/group'
 
 class Feature::Feature
+  attr_reader :name
   attr_reader :backend
   attr_reader :groups
+  attr_reader :default
 
   def initialize(name, backend, opts = {})
     @name = name
     @backend = backend
+    @default = opts[:default].nil? ? true : opts[:default]
 
     groups = opts[:groups] || []
     set_groups(groups)
@@ -26,8 +29,7 @@ class Feature::Feature
   def enabled?(opts = {})
   end
 
-  def default
-    @default
+    default
   end
 
   private
