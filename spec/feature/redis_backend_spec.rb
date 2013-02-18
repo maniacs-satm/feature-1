@@ -56,26 +56,26 @@ describe Feature::RedisBackend do
   describe "#enable" do
     it "enables a previously unspecified feature" do
       subject.enable(:foo)
-      subject.enabled?(:foo, default: false).should be_true
+      subject.feature_globally_enabled?(:foo).should be_true
     end
 
     it "enables a previously disabled feature" do
       redis.set('foo', 'disabled')
       subject.enable(:foo)
-      subject.enabled?(:foo, default: false).should be_true
+      subject.feature_globally_enabled?(:foo).should be_true
     end
   end
 
   describe "#disable" do
     it "disables a previously unspecified feature" do
       subject.disable(:foo)
-      subject.enabled?(:foo, default: true).should be_false
+      subject.feature_globally_enabled?(:foo).should be_false
     end
 
     it "enables a previously disabled feature" do
       redis.set('foo', 'enabled')
       subject.disable(:foo)
-      subject.enabled?(:foo, default: true).should be_false
+      subject.feature_globally_enabled?(:foo).should be_false
     end
   end
 
