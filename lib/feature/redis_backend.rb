@@ -8,18 +8,14 @@ class Feature::RedisBackend
     @redis = Redis::Namespace.new(namespace, redis: redis_connection)
   end
 
-  # Check if a feature is enabled. A feature enabled globally takes precedence.
-  # If the feature has groups configured and is not enabled globally then group
-  # membership will be checked.
-  def enabled?(feature, opts)
-    global_setting = check_global_value(feature, default: opts[:default])
-    groups = opts.fetch(:groups, [])
-
-    # Return the global setting if its set to true, or if the there are no
-    # groups configured for the feature.
-    return global_setting if global_setting || groups.empty?
-
-    groups.any? { |group| in_group?(group, opts[:value]) }
+  # Check if a feature is enabled
+  def feature_globally_enabled?(feature)
+    case @redis.get(feature)
+    when 'enabled'
+      true
+    when 'disabled'
+      false
+    end
   end
 
   # Globally enable a feature
@@ -60,20 +56,5 @@ class Feature::RedisBackend
 
   def group_key(name)
     "group:#{name}"
-  end
-
-  private
-
-  def check_global_value(feature, opts)
-    default = opts[:default]
-
-    case @redis.get(feature)
-    when 'enabled'
-      true
-    when 'disabled'
-      false
-    else
-      default
-    end
   end
 end

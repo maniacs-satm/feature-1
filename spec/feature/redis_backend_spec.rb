@@ -17,16 +17,16 @@ describe Feature::RedisBackend do
     end
   end
 
-  describe "#enabled?" do
+  describe "#feature_globally_enabled?" do
     context "when the feature is enabled in redis" do
       before { redis.set('foo', 'enabled') }
 
       it "returns true with true as the default" do
-        subject.enabled?(:foo, default: true).should be_true
+        subject.feature_globally_enabled?(:foo).should be_true
       end
 
       it "returns true with false as the default" do
-        subject.enabled?(:foo, default: false).should be_true
+        subject.feature_globally_enabled?(:foo).should be_true
       end
     end
 
@@ -34,48 +34,21 @@ describe Feature::RedisBackend do
       before { redis.set('foo', 'disabled') }
 
       it "returns false with true as the default" do
-        subject.enabled?(:foo, default: true).should be_false
+        subject.feature_globally_enabled?(:foo).should be_false
       end
 
       it "returns false with false as the default" do
-        subject.enabled?(:foo, default: false).should be_false
+        subject.feature_globally_enabled?(:foo).should be_false
       end
     end
 
     context "when the feature is missing from redis" do
       it "returns true with true as the default" do
-        subject.enabled?(:foo, default: true).should be_true
+        subject.feature_globally_enabled?(:foo).should be_nil
       end
 
       it "returns false with false as the default" do
-        subject.enabled?(:foo, default: false).should be_false
-      end
-    end
-
-    context "when is enabled for a group" do
-      it "returns true if globally enabled (regardless of the groups)" do
-        redis.set('foo', 'enabled')
-
-        result = subject.enabled?(:foo, groups: [:employees],
-                                        value: 'alan')
-        result.should be_true
-      end
-
-      context "when globally disabled" do
-        before { redis.set('foo', 'disabled') }
-
-        it "returns true if enabled at least in one of the groups" do
-          subject.add_to_group('employees', 'alan')
-          result = subject.enabled?(:foo, groups: [:employees, :beta],
-                                          value: 'alan')
-          result.should be_true
-        end
-
-        it "returns false if not enabled in any of the groups" do
-          result = subject.enabled?(:foo, groups: [:employees, :beta],
-                                          value: 'alan')
-          result.should be_false
-        end
+        subject.feature_globally_enabled?(:foo).should be_nil
       end
     end
   end
