@@ -21,10 +21,10 @@ class Feature::Feature
   # - A list of all the members of each group
   # - `:all` if enabled by default or an empty collection otherwise.
   def members
-    return :all if backend.globally_enabled?(name)
+    return :all if backend.feature_globally_enabled?(name)
 
     if groups.any?
-      return groups.map {|group| group.members}.flatten(1).uniq
+      return groups.map { |group| group.members }.flatten(1).uniq
     end
 
     default ? :all : []
@@ -47,7 +47,7 @@ class Feature::Feature
   # - Check if the value given belongs to one of the groups
   # - Return the default value
   def enabled?(opts = {})
-    return true if backend.globally_enabled?(name)
+    return true if backend.feature_globally_enabled?(name)
 
     if groups.any? && !!opts[:for]
       return true if groups.any? {|g| g.member?(opts[:for]) }

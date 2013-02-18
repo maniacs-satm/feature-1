@@ -50,7 +50,7 @@ describe Feature::Feature do
       let(:feature) { described_class.new(:foo, backend) }
 
       it "returns true if globally enabled" do
-        backend.expects(:globally_enabled?).
+        backend.expects(:feature_globally_enabled?).
           with(feature.name).
           returns(true)
 
@@ -58,7 +58,7 @@ describe Feature::Feature do
       end
 
       it "returns the default otherwise" do
-        backend.expects(:globally_enabled?).
+        backend.expects(:feature_globally_enabled?).
           with(feature.name).
           returns(false)
 
@@ -73,7 +73,7 @@ describe Feature::Feature do
       let(:feature) { described_class.new(:foo, backend, groups: [:foo]) }
 
       it "returns true if globally enabled" do
-        backend.expects(:globally_enabled?).
+        backend.expects(:feature_globally_enabled?).
           with(feature.name).
           returns(true)
 
@@ -81,7 +81,7 @@ describe Feature::Feature do
       end
 
       context "and not globally enabled" do
-        before { backend.expects(:globally_enabled?).returns(false) }
+        before { backend.expects(:feature_globally_enabled?).returns(false) }
 
         it "returns the default if not if in one of the groups" do
           Feature::Group.any_instance.
@@ -122,7 +122,7 @@ describe Feature::Feature do
     it "returns ':all' if globally enabled" do
       feature = described_class.new(:foo, backend)
 
-      backend.expects(:globally_enabled?).
+      backend.expects(:feature_globally_enabled?).
         with(feature.name).
         returns(true)
 
@@ -132,7 +132,7 @@ describe Feature::Feature do
     context "when not globally enabled and groups" do
       let(:feature) { described_class.new(:foo, backend, groups: [:g1, :g2]) }
 
-      before { backend.stubs(:globally_enabled?).returns(false) }
+      before { backend.stubs(:feature_globally_enabled?).returns(false) }
 
       it "returns the members of all the groups" do
         Feature::Group.any_instance.stubs(:members).
@@ -146,7 +146,7 @@ describe Feature::Feature do
     context "when not globally enabled and no groups" do
       let (:feature) { described_class.new(:foo, backend) }
 
-      before { backend.stubs(:globally_enabled?).returns(false) }
+      before { backend.stubs(:feature_globally_enabled?).returns(false) }
 
       it "returns ':all' if enabled by default" do
         feature.expects(:default).returns(true)
