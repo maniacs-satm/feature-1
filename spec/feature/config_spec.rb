@@ -7,19 +7,25 @@ describe Feature::Config do
   describe "#feature" do
     it "doesn't allow two features with the same name" do
       expect do
-        subject.feature :foo, default: :on
-        subject.feature :foo, default: :off
+        subject.feature :foo, default: true
+        subject.feature :foo, default: false
       end.to raise_error
     end
 
     it "adds features to the feature definitions list" do
-      subject.feature :foo, default: :on
-      subject.features.should include :foo
+      feature = stub
+      Feature::Feature.expects(:new).
+        with(:foo, anything(), default: true).
+        returns(feature)
+
+      subject.feature :foo, default: true
+      subject.features[:foo].should == feature
     end
 
     it "defaults 'default' to true" do
+      pending 'this should be tested in the feature class'
       subject.feature :foo
-      subject.features[:foo][:default].should be_true
+      subject.features[:foo].default.should be_true
     end
 
     it "accepts definitions with no options" do
