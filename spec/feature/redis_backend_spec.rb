@@ -150,4 +150,42 @@ describe Feature::RedisBackend do
       subject.in_group?('admin', '1').should be_true
     end
   end
+
+  describe "#any_in_group?" do
+    it "returns false if the group is not defined" do
+      subject.any_in_group?('admin', ['1']).should be_false
+    end
+
+    it "returns true if one is in the group" do
+      subject.add_to_group('admin', '1')
+
+      subject.any_in_group?('admin', ['1', '2']).should be_true
+    end
+
+    it "returns true if all are in the group" do
+      subject.add_to_group('admin', '1')
+      subject.add_to_group('admin', '2')
+
+      subject.any_in_group?('admin', ['1', '2']).should be_true
+    end
+  end
+
+  describe "#all_in_group?" do
+    it "returns false if the group is not defined" do
+      subject.all_in_group?('admin', ['1']).should be_false
+    end
+
+    it "returns false if all are not in the group" do
+      subject.add_to_group('admin', '1')
+
+      subject.all_in_group?('admin', ['1', '2']).should be_false
+    end
+
+    it "returns true if all are in the group" do
+      subject.add_to_group('admin', '1')
+      subject.add_to_group('admin', '2')
+
+      subject.all_in_group?('admin', ['1', '2']).should be_true
+    end
+  end
 end

@@ -58,6 +58,18 @@ class Feature::RedisBackend
     @redis.sismember(group_key(name), value)
   end
 
+  # Checks if any of the given values are part of the group
+  def any_in_group?(name, values)
+    values = [values] unless values.is_a?(Array)
+    values.any? { |value| @redis.sismember(group_key(name), value) }
+  end
+
+  # Checks if all of the given values are part of the group
+  def all_in_group?(name, values)
+    values = [values] unless values.is_a?(Array)
+    values.all? { |value| @redis.sismember(group_key(name), value) }
+  end
+
   def group_key(name)
     "group:#{name}"
   end
