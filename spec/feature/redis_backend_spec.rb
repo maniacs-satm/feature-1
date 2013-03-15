@@ -116,7 +116,7 @@ describe Feature::RedisBackend do
     end
   end
 
-  describe "#remove_to_group" do
+  describe "#remove_from_group" do
     it "removes a value from the group set" do
 
       subject.add_to_group('admin', 'a')
