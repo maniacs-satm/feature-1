@@ -12,10 +12,9 @@ module Feature
 
     # Set up an order of preference for `for` options
     if opts[:for]
-      feature_opts = feature_opts.merge(value: opts[:for])
+      feature_opts[:for] = opts[:for]
     elsif opts[:for_any]
-      feature_opts[:for_any] = true
-      feature_opts = feature_opts.merge(value: opts[:for_any])
+      feature_opts[:for_any] = opts[:for_any]
     end
     backend.enabled?(feature_name, feature_opts)
   end

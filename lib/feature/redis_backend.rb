@@ -20,10 +20,10 @@ class Feature::RedisBackend
     return global_setting if global_setting || groups.empty?
 
     if opts[:for_any]
-      return groups.any? { |group| any_in_group?(group, opts[:value]) }
+      groups.any? { |group| any_in_group?(group, opts[:for_any]) }
+    else
+      groups.any? { |group| in_group?(group, opts[:for]) }
     end
-
-    groups.any? { |group| in_group?(group, opts[:value]) }
   end
 
   # Globally enable a feature

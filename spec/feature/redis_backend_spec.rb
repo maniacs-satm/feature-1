@@ -57,7 +57,7 @@ describe Feature::RedisBackend do
         redis.set('foo', 'enabled')
 
         result = subject.enabled?(:foo, groups: [:employees],
-                                        value: 'alan')
+                                        for: 'alan')
         result.should be_true
       end
 
@@ -67,27 +67,27 @@ describe Feature::RedisBackend do
         it "returns true if enabled at least in one of the groups" do
           subject.add_to_group('employees', 'alan')
           result = subject.enabled?(:foo, groups: [:employees, :beta],
-                                          value: 'alan')
+                                          for: 'alan')
           result.should be_true
         end
 
         it "returns false if not enabled in any of the groups" do
           result = subject.enabled?(:foo, groups: [:employees, :beta],
-                                          value: 'alan')
+                                          for: 'alan')
           result.should be_false
         end
 
         context "when for_any option is passed" do
           it "returns false if not enabled for any items" do
-            subject.enabled?(:foo, for_any: true, value: ["a", "b"])
+            subject.enabled?(:foo, for_any: true, for_any: ["a", "b"])
               .should be_false
           end
 
           it "returns true if enabled for one item" do
             subject.add_to_group('employees', 'alan')
-            subject.enabled?(:foo, groups: [:employees],
-                                for_any: true, value: ["alan", "andy"])
-              .should be_true
+            result = subject.enabled?(:foo, groups: [:employees],
+                                        for_any: ["alan", "andy"])
+            result.should be_true
           end
         end
 
