@@ -76,6 +76,21 @@ describe Feature::RedisBackend do
                                           value: 'alan')
           result.should be_false
         end
+
+        context "when for_any option is passed" do
+          it "returns false if not enabled for any items" do
+            subject.enabled?(:foo, for_any: true, value: ["a", "b"])
+              .should be_false
+          end
+
+          it "returns true if enabled for one item" do
+            subject.add_to_group('employees', 'alan')
+            subject.enabled?(:foo, groups: [:employees],
+                                for_any: true, value: ["alan", "andy"])
+              .should be_true
+          end
+        end
+
       end
     end
   end

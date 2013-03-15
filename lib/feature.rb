@@ -14,6 +14,7 @@ module Feature
     if opts[:for]
       feature_opts = feature_opts.merge(value: opts[:for])
     elsif opts[:for_any]
+      feature_opts[:for_any] = true
       feature_opts = feature_opts.merge(value: opts[:for_any])
     end
     backend.enabled?(feature_name, feature_opts)
