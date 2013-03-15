@@ -38,10 +38,10 @@ describe Feature do
         described_class.enabled?(:foo, for: "1", for_all: ["2"])
       end
 
-      it "prefers :for_all over :for_any" do
+      it "sets a :for_any flag" do
         described_class.backend.expects(:enabled?).
-          with(:foo, has_entry(:value, ["1"]), Not(has_entry(:value, ["2"])) )
-        described_class.enabled?(:foo, for_all: ["1"], for_any: ["2"])
+          with(:foo, has_entry(:for_any, true))
+        described_class.enabled?(:foo, for_any: ["1", "2"])
       end
     end
 

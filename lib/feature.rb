@@ -13,8 +13,6 @@ module Feature
     # Set up an order of preference for `for` options
     if opts[:for]
       feature_opts = feature_opts.merge(value: opts[:for])
-    elsif opts[:for_all]
-      feature_opts = feature_opts.merge(value: opts[:for_all])
     elsif opts[:for_any]
       feature_opts = feature_opts.merge(value: opts[:for_any])
     end
