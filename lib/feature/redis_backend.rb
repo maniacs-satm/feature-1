@@ -53,21 +53,17 @@ class Feature::RedisBackend
     @redis.srem(group_key(name), value)
   end
 
-  # Checks if the given value is part of the group
-  def in_group?(name, value)
-    @redis.sismember(group_key(name), value)
+  # Checks if all of the given values are part of the group, accepts a string
+  # or array for value(s)
+  def in_group?(name, values)
+    values = [values] unless values.is_a?(Array)
+    values.all? { |value| @redis.sismember(group_key(name), value) }
   end
 
   # Checks if any of the given values are part of the group
   def any_in_group?(name, values)
     values = [values] unless values.is_a?(Array)
     values.any? { |value| @redis.sismember(group_key(name), value) }
-  end
-
-  # Checks if all of the given values are part of the group
-  def all_in_group?(name, values)
-    values = [values] unless values.is_a?(Array)
-    values.all? { |value| @redis.sismember(group_key(name), value) }
   end
 
   def group_key(name)
