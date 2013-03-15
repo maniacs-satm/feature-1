@@ -31,6 +31,18 @@ describe Feature do
           with(:foo, has_entry(:value, 'bar'))
         described_class.enabled?(:foo, for: 'bar')
       end
+
+      it "prefers :for over :for_all" do
+        described_class.backend.expects(:enabled?).
+          with(:foo, has_entry(:value, "1"), Not(has_entry(:value, ["2"])))
+        described_class.enabled?(:foo, for: "1", for_all: ["2"])
+      end
+
+      it "prefers :for_all over :for_any" do
+        described_class.backend.expects(:enabled?).
+          with(:foo, has_entry(:value, ["1"]), Not(has_entry(:value, ["2"])) )
+        described_class.enabled?(:foo, for_all: ["1"], for_any: ["2"])
+      end
     end
 
     describe ".enable" do
