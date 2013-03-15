@@ -46,12 +46,24 @@ Call `Feature.enabled?` with the name of the feature:
 Feature.enabled? :sepa_payments  # => false
 ```
 
-or to check if a feature is enabled for a given value (gets checked against the
-defined groups for the feature):
+or to check if a feature is enabled for given value(2) (gets checked against
+the defined groups for the feature):
 
 ```ruby
 Feature.enabled? :sepa_payments, for: current_user.id
+# True if enabled for id-1 AND id-2
+Feature.enabled? :sepa_payments, for: ["id-1", "id-2"]
 ```
+
+Check if a feature is enabled for any in a given array
+
+```ruby
+# True if enabled for id-1 or id-2
+Feature.enabled?(:sepa_payments, for_any: ["id-1", "id-2"])
+```
+
+NB. If more than one `for*` option is passed, the order of preference is
+`for`, then `for_any`.
 
 ### Enabling and Disabling Features Globally
 

@@ -28,8 +28,20 @@ describe Feature do
 
       it "passes the object which the decision should be based on" do
         described_class.backend.expects(:enabled?).
-          with(:foo, has_entry(:value, 'bar'))
+          with(:foo, has_entry(:for, 'bar'))
         described_class.enabled?(:foo, for: 'bar')
+      end
+
+      it "prefers :for over :for_all" do
+        described_class.backend.expects(:enabled?).
+          with(:foo, has_entry(:for, "1"), Not(has_entry(:for_any, ["2"])))
+        described_class.enabled?(:foo, for: "1", for_all: ["2"])
+      end
+
+      it "passes :for_any through" do
+        described_class.backend.expects(:enabled?).
+          with(:foo, has_entry(:for_any, ["1", "2"]))
+        described_class.enabled?(:foo, for_any: ["1", "2"])
       end
     end
 

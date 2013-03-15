@@ -57,7 +57,7 @@ describe Feature::RedisBackend do
         redis.set('foo', 'enabled')
 
         result = subject.enabled?(:foo, groups: [:employees],
-                                        value: 'alan')
+                                        for: 'alan')
         result.should be_true
       end
 
@@ -67,15 +67,30 @@ describe Feature::RedisBackend do
         it "returns true if enabled at least in one of the groups" do
           subject.add_to_group('employees', 'alan')
           result = subject.enabled?(:foo, groups: [:employees, :beta],
-                                          value: 'alan')
+                                          for: 'alan')
           result.should be_true
         end
 
         it "returns false if not enabled in any of the groups" do
           result = subject.enabled?(:foo, groups: [:employees, :beta],
-                                          value: 'alan')
+                                          for: 'alan')
           result.should be_false
         end
+
+        context "when for_any option is passed" do
+          it "returns false if not enabled for any items" do
+            subject.enabled?(:foo, for_any: true, for_any: ["a", "b"])
+              .should be_false
+          end
+
+          it "returns true if enabled for one item" do
+            subject.add_to_group('employees', 'alan')
+            result = subject.enabled?(:foo, groups: [:employees],
+                                        for_any: ["alan", "andy"])
+            result.should be_true
+          end
+        end
+
       end
     end
   end
@@ -116,7 +131,7 @@ describe Feature::RedisBackend do
     end
   end
 
-  describe "#remove_to_group" do
+  describe "#remove_from_group" do
     it "removes a value from the group set" do
 
       subject.add_to_group('admin', 'a')
@@ -138,16 +153,52 @@ describe Feature::RedisBackend do
       subject.in_group?('admin', '1').should be_false
     end
 
-    it "returns false if is not the group" do
-      subject.add_to_group('admin', '1')
+    context "with one item" do
+      it "returns false if is not the group" do
+        subject.add_to_group('admin', '1')
 
-      subject.in_group?('admin', '2').should be_false
+        subject.in_group?('admin', '2').should be_false
+      end
+
+      it "returns true if is in the group" do
+        subject.add_to_group('admin', '1')
+
+        subject.in_group?('admin', '1').should be_true
+      end
     end
 
-    it "returns true if is in the group" do
+    context "with multiple items" do
+      it "returns false if all are not in the group" do
+        subject.add_to_group('admin', '1')
+
+        subject.in_group?('admin', ['1', '2']).should be_false
+      end
+
+      it "returns true if all are in the group" do
+        subject.add_to_group('admin', '1')
+        subject.add_to_group('admin', '2')
+
+        subject.in_group?('admin', ['1', '2']).should be_true
+      end
+    end
+  end
+
+  describe "#any_in_group?" do
+    it "returns false if the group is not defined" do
+      subject.any_in_group?('admin', ['1']).should be_false
+    end
+
+    it "returns true if one is in the group" do
       subject.add_to_group('admin', '1')
 
-      subject.in_group?('admin', '1').should be_true
+      subject.any_in_group?('admin', ['1', '2']).should be_true
+    end
+
+    it "returns true if all are in the group" do
+      subject.add_to_group('admin', '1')
+      subject.add_to_group('admin', '2')
+
+      subject.any_in_group?('admin', ['1', '2']).should be_true
     end
   end
 end
