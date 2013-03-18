@@ -54,5 +54,15 @@ describe Feature do
       end
     end
   end
+
+  describe "Feature method" do
+    context "given an invalid name" do
+      specify { expect { Feature(:bar) }.to raise_error }
+    end
+
+    context "given an valid name" do
+      specify { Feature(:foo).should be_a Feature::Feature }
+    end
+  end
 end
 
