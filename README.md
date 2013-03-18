@@ -43,37 +43,34 @@ end
 Call `Feature.enabled?` with the name of the feature:
 
 ```ruby
-Feature.enabled? :sepa_payments  # => false
+Feature(:sepa_payments).enabled?   # => false
 ```
 
 or to check if a feature is enabled for given value(2) (gets checked against
 the defined groups for the feature):
 
 ```ruby
-Feature.enabled? :sepa_payments, for: current_user.id
+Feature(:sepa_payments).enabled_for?(current_user.id)
 # True if enabled for id-1 AND id-2
-Feature.enabled? :sepa_payments, for: ["id-1", "id-2"]
+Feature(:sepa_payments).enabled_for_all?(["id-1", "id-2"])
 ```
 
 Check if a feature is enabled for any in a given array
 
 ```ruby
 # True if enabled for id-1 or id-2
-Feature.enabled?(:sepa_payments, for_any: ["id-1", "id-2"])
+Feature(:sepa_payments).enabled_for_any?(["id-1", "id-2"])
 ```
-
-NB. If more than one `for*` option is passed, the order of preference is
-`for`, then `for_any`.
 
 ### Enabling and Disabling Features Globally
 
 Just call `enable` or `disable` with the name of the feature.
 
 ```ruby
-Feature.enable :sepa_payments
-Feature.enabled? :sepa_payments  # => true
-Feature.disable :sepa_payments
-Feature.enabled? :sepa_payments  # => false
+Feature(:sepa_payments).enable
+Feature(:sepa_payments).enabled?   # => true
+Feature(:sepa_payments).disable
+Feature(:sepa_payments).enabled?   # => false
 ```
 ### Changing Groups membership during runtime
 
