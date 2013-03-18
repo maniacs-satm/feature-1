@@ -1,4 +1,3 @@
-require 'feature/config'
 module Feature
   autoload :Config, 'feature/config'
   autoload :RedisBackend, 'feature/redis_backend'
