@@ -2,7 +2,7 @@ require 'feature'
 
 module Feature
   class Feature
-    def initialize(name, options = {})
+    def initialize(name, options)
       @name = name
       @options = options
     end
@@ -18,7 +18,7 @@ module Feature
     # Check if the feature is enabled for a specific id.
     def enabled_for?(id)
       if id.is_a?(Enumerable)
-        raise ArgumentError, "expected an id, got a #{id.class}"
+        raise ArgumentError, "expected an id, got an enumerable"
       end
       backend.enabled?(@name, @options.merge(:for => id))
     end
@@ -50,7 +50,7 @@ module Feature
     end
 
     def backend
-      Feature.backend
+      ::Feature.backend
     end
   end
 end

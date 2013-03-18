@@ -65,6 +65,6 @@ end
 
 def Feature(name)
   Feature.check_feature_defined(name)
-  Feature::Feature.new(name)
+  Feature::Feature.new(name, Feature.features[name])
 end
 
