@@ -2,8 +2,8 @@ PATH
   remote: .
   specs:
     feature (0.1.0)
-      redis (~> 3.0)
-      redis-namespace (~> 1.2.1)
+      redis (~> 2.2)
+      redis-namespace (~> 1.0)
 
 GEM
   remote: http://rubygems.org/
@@ -18,9 +18,9 @@ GEM
     mocha (0.12.6)
       metaclass (~> 0.0.1)
     rb-fsevent (0.9.1)
-    redis (3.0.1)
-    redis-namespace (1.2.1)
-      redis (~> 3.0.0)
+    redis (2.2.2)
+    redis-namespace (1.1.0)
+      redis (< 3.0.0)
     rspec (2.11.0)
       rspec-core (~> 2.11.0)
       rspec-expectations (~> 2.11.0)
