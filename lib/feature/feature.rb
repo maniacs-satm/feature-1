@@ -11,7 +11,6 @@ module Feature
     # it will fall back to the default provided in the config. If no default
     # was provided, it will return true.
     def enabled?
-      #check_feature_defined(feature_name)
       backend.enabled?(@name, @options)
     end
 
