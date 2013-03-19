@@ -64,6 +64,13 @@ describe Feature::RedisBackend do
       context "when globally disabled" do
         before { redis.set('foo', 'disabled') }
 
+        context "with groups passed" do
+          it "returns false with no group members passed" do
+            result = subject.enabled?(:foo, groups: ["foo"], default: false)
+            result.should be_false
+          end
+        end
+
         it "returns true if enabled at least in one of the groups" do
           subject.add_to_group('employees', 'alan')
           result = subject.enabled?(:foo, groups: [:employees, :beta],

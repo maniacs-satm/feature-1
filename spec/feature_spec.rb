@@ -20,45 +20,6 @@ describe Feature do
       end
     end
 
-    describe ".enabled?" do
-      it "delegates the decision to the selected backend" do
-        described_class.backend.expects(:enabled?).with(:foo, default: true)
-        described_class.enabled?(:foo)
-      end
-
-      it "passes the object which the decision should be based on" do
-        described_class.backend.expects(:enabled?).
-          with(:foo, has_entry(:for, 'bar'))
-        described_class.enabled?(:foo, for: 'bar')
-      end
-
-      it "prefers :for over :for_all" do
-        described_class.backend.expects(:enabled?).
-          with(:foo, has_entry(:for, "1"), Not(has_entry(:for_any, ["2"])))
-        described_class.enabled?(:foo, for: "1", for_all: ["2"])
-      end
-
-      it "passes :for_any through" do
-        described_class.backend.expects(:enabled?).
-          with(:foo, has_entry(:for_any, ["1", "2"]))
-        described_class.enabled?(:foo, for_any: ["1", "2"])
-      end
-    end
-
-    describe ".enable" do
-      it "delegates to the selected backend" do
-        described_class.backend.expects(:enable).with(:foo)
-        described_class.enable(:foo)
-      end
-    end
-
-    describe ".disable" do
-      it "delegates to the selected backend" do
-        described_class.backend.expects(:disable).with(:foo)
-        described_class.disable(:foo)
-      end
-    end
-
     describe ".check_feature_defined" do
       it "does nothing when given a defined feature" do
         expect do
@@ -91,6 +52,16 @@ describe Feature do
         described_class.backend.expects(:remove_from_group).with(:foo, :bar)
         described_class.remove_from_group(:foo, :bar)
       end
+    end
+  end
+
+  describe "Feature method" do
+    context "given an invalid name" do
+      specify { expect { Feature(:bar) }.to raise_error }
+    end
+
+    context "given an valid name" do
+      specify { Feature(:foo).should be_a Feature::Feature }
     end
   end
 end

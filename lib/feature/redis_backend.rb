@@ -14,15 +14,18 @@ class Feature::RedisBackend
   def enabled?(feature, opts)
     global_setting = check_global_value(feature, default: opts[:default])
     groups = opts.fetch(:groups, [])
+    group_members = opts[:for] || opts[:for_any]
 
     # Return the global setting if its set to true, or if the there are no
-    # groups configured for the feature.
-    return global_setting if global_setting || groups.empty?
+    # groups configured for the feature or if no group members have been passed
+    if global_setting || groups.empty? || group_members.nil?
+      return global_setting
+    end
 
     if opts[:for_any]
-      groups.any? { |group| any_in_group?(group, opts[:for_any]) }
+      groups.any? { |group| any_in_group?(group, group_members) }
     else
-      groups.any? { |group| in_group?(group, opts[:for]) }
+      groups.any? { |group| in_group?(group, group_members) }
     end
   end
 
