@@ -10,6 +10,7 @@ Gem::Specification.new do |gem|
 
   gem.add_dependency 'redis', '~> 2.2'
   gem.add_dependency 'redis-namespace', '~> 1.0'
+  gem.add_dependency 'sinatra', '~> 1.4'
 
   gem.add_development_dependency 'rspec', '~> 2.11'
   gem.add_development_dependency 'mocha', '~> 0.12'
