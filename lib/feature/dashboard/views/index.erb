@@ -15,7 +15,9 @@
         <td>
           <% if info.has_key?(:groups) %>
             <% info[:groups].each do |group| %>
-              <code>:<%= group %></code>
+              <a href="<%= url("group/#{group}") %>">
+                <code>:<%= group %></code>
+              </a>
             <% end -%>
           <% else %>
             <span class="muted">-</span>
@@ -34,11 +36,11 @@
         <td>
           <% if Feature(name).enabled? %>
             <form method="post" action="<%= url("#{name}/disable") %>">
-              <button class="btn btn-danger">Disable</button>
+              <button class="btn btn-small btn-danger">Disable</button>
             </form>
           <% else %>
             <form method="post" action="<%= url("#{name}/enable") %>">
-              <button class="btn btn-success">Enable</button>
+              <button class="btn btn-small btn-success">Enable</button>
             </form>
           <% end %>
         </td>

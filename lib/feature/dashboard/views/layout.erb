@@ -9,19 +9,20 @@
 
 <header class="page-header">
   <div class="container">
-    <h1 class="pull-left">Feature</h1>
-    <nav class="main-nav pull-left">
-      <span class="muted">/</span>
-      <a href="<%= url("/") %>">features</a>
-      <span class="muted">/</span>
-      <a href="<%= url("/groups") %>">groups</a>
-    </nav>
+    <h1 class="pull-left">
+      <a href="<%= url("/") %>">Feature</a>
+      <% if @title %><small><%= @title %></small><% end %>
+    </h1>
   </div>
 </header>
 
 <div class="container">
-  <% if @flash %>
-    <div class="alert alert-success"><%= @flash %></div>
+  <% if flash[:notice] %>
+    <div class="alert alert-success"><%= flash[:notice] %></div>
+  <% end -%>
+
+  <% if flash[:error] %>
+    <div class="alert alert-error"><%= flash[:error] %></div>
   <% end -%>
 
   <%= yield %>
