@@ -53,6 +53,13 @@ describe Feature do
         described_class.remove_from_group(:foo, :bar)
       end
     end
+
+    describe ".get_group_members" do
+      it "delegates to the selected backend" do
+        described_class.backend.expects(:get_group_members).with(:foo)
+        described_class.get_group_members(:foo)
+      end
+    end
   end
 
   describe "Feature method" do

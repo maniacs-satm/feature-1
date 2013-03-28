@@ -149,6 +149,17 @@ describe Feature::RedisBackend do
     end
   end
 
+  describe "#get_group_members" do
+    before do
+      subject.add_to_group("admin", "1")
+      subject.add_to_group("admin", "2")
+    end
+
+    it "lists group members" do
+      subject.get_group_members("admin").should == %w(1 2)
+    end
+  end
+
   describe "#group_key" do
     it "prefixes the redis key with 'group:'" do
       subject.group_key('admin').should start_with('group:')

@@ -60,6 +60,10 @@ class Feature::RedisBackend
     @redis.srem(group_key(name), value)
   end
 
+  def get_group_members(name)
+    @redis.smembers(group_key(name))
+  end
+
   # Checks if all of the given values are part of the group, accepts a string
   # or array for value(s)
   def in_group?(name, values)
