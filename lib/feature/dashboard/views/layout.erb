@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Feature</title>
+  <link rel="stylesheet" href="<%= url("bootstrap.css") %>" />
+</head>
+<body>
+
+<header class="page-header">
+  <div class="container">
+    <h1 class="pull-left">Feature</h1>
+    <nav class="main-nav pull-left">
+      <span class="muted">/</span>
+      <a href="<%= url("/") %>">features</a>
+      <span class="muted">/</span>
+      <a href="<%= url("/groups") %>">groups</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+  <% if @flash %>
+    <div class="alert alert-success"><%= @flash %></div>
+  <% end -%>
+
+  <%= yield %>
+</div>
+
+</body>
+</html>
