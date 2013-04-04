@@ -39,12 +39,14 @@ module Feature
     # Groups
 
     get "/group/:id" do
-      set_group_variables
+      set_group
+      @members = ::Feature.get_group_members(@group)
+      @title = "group / #{@group}"
       erb(:group)
     end
 
     post "/group/:id/members" do
-      set_group_variables
+      set_group
       member = params[:member]
 
       if member.length == 0
@@ -70,10 +72,8 @@ module Feature
 
     private
 
-    def set_group_variables
+    def set_group
       @group = params[:id].to_sym
-      @title = "group / #{@group}"
-      @members = ::Feature.get_group_members(@group)
     end
   end
 end
