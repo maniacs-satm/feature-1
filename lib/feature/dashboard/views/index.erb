@@ -35,11 +35,11 @@
         </td>
         <td>
           <% if Feature(name).enabled? %>
-            <form method="post" action="<%= url("#{name}/disable") %>">
+            <form method="post" action="<%= url("/feature/#{name}/disable") %>">
               <button class="btn btn-small btn-danger">Disable</button>
             </form>
           <% else %>
-            <form method="post" action="<%= url("#{name}/enable") %>">
+            <form method="post" action="<%= url("/feature/#{name}/enable") %>">
               <button class="btn btn-small btn-success">Enable</button>
             </form>
           <% end %>

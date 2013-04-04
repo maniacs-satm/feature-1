@@ -24,16 +24,16 @@ module Feature
       erb(:index)
     end
 
-    post "/:id/enable" do
+    post "/feature/:id/enable" do
       id = params[:id].to_sym
-      flash.now[:notice] = "#{id} enabled" if Feature(id).enable
-      erb :index
+      flash[:notice] = "#{id} enabled" if Feature(id).enable
+      redirect to("/")
     end
 
-    post "/:id/disable" do
+    post "/feature/:id/disable" do
       id = params[:id].to_sym
-      flash.now[:notice] = "#{id} disabled" if Feature(id).disable
-      erb(:index)
+      flash[:notice] = "#{id} disabled" if Feature(id).disable
+      redirect to("/")
     end
 
     # Groups
