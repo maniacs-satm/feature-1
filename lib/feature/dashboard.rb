@@ -43,7 +43,7 @@ module Feature
       erb(:group)
     end
 
-    post "/group/:id/new" do
+    post "/group/:id/members" do
       set_group_variables
       member = params[:member]
 
@@ -58,8 +58,8 @@ module Feature
       redirect to("/group/#{@group}")
     end
 
-    post "/group/:id/:member/destroy" do
-      set_group_variables
+    post "/group/:id/member/:member/destroy" do
+      set_group
       member = params[:member]
 
       if ::Feature.remove_from_group(@group, member)
