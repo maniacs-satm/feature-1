@@ -24,13 +24,13 @@ module Feature
       erb(:index)
     end
 
-    post "/feature/:id/enable" do
+    post "/features/:id/enable" do
       id = params[:id].to_sym
       flash[:notice] = "#{id} enabled" if Feature(id).enable
       redirect to("/")
     end
 
-    post "/feature/:id/disable" do
+    post "/features/:id/disable" do
       id = params[:id].to_sym
       flash[:notice] = "#{id} disabled" if Feature(id).disable
       redirect to("/")
@@ -38,14 +38,14 @@ module Feature
 
     # Groups
 
-    get "/group/:id" do
+    get "/groups/:id" do
       set_group
       @members = ::Feature.get_group_members(@group)
       @title = "group / #{@group}"
       erb(:group)
     end
 
-    post "/group/:id/members" do
+    post "/groups/:id/members" do
       set_group
       member = params[:member]
 
@@ -57,17 +57,17 @@ module Feature
       if ::Feature.add_to_group(@group, member)
         flash[:notice] = "#{member} added"
       end
-      redirect to("/group/#{@group}")
+      redirect to("/groups/#{@group}")
     end
 
-    post "/group/:id/member/:member/destroy" do
+    post "/groups/:id/members/:member/destroy" do
       set_group
       member = params[:member]
 
       if ::Feature.remove_from_group(@group, member)
         flash[:notice] = "#{member} removed"
       end
-      redirect to("/group/#{@group}")
+      redirect to("/groups/#{@group}")
     end
 
     private
