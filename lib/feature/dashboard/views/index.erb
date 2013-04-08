@@ -1,0 +1,50 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Feature name</th>
+      <th>Enabled for groups</th>
+      <th>Default</th>
+      <th>Enabled?</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @features.each do |name, info| %>
+      <tr>
+        <td><code>:<%= name %></code></td>
+        <td>
+          <% if info.has_key?(:groups) %>
+            <% info[:groups].each do |group| %>
+              <a href="<%= url("groups/#{group}") %>">
+                <code>:<%= group %></code>
+              </a>
+            <% end -%>
+          <% else %>
+            <span class="muted">-</span>
+          <% end %>
+        </td>
+        <td>
+          <%= info[:default] ? "Enabled" : "Disabled" %>
+        </td>
+        <td>
+          <% if Feature(name).enabled? %>
+            <span class="label label-success">Yes</span>
+          <% else %>
+            <span class="label label-danger">No</span>
+          <% end %>
+        </td>
+        <td>
+          <% if Feature(name).enabled? %>
+            <form method="post" action="<%= url("/features/#{name}/disable") %>">
+              <button class="btn btn-small btn-danger">Disable</button>
+            </form>
+          <% else %>
+            <form method="post" action="<%= url("/features/#{name}/enable") %>">
+              <button class="btn btn-small btn-success">Enable</button>
+            </form>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

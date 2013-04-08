@@ -1,0 +1,36 @@
+<h2>Members:</h2>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <%# I'm aware that this is invalid HTML. I don't care. %>
+      <form method="post" action="<%= url("groups/#{@group}/members") %>">
+        <td>
+          <input type="text" name="member" id="member"
+                 placeholder="Member ID" />
+        </td>
+        <td>
+          <button class="btn btn-primary">Add to group</button>
+        </td>
+      </form>
+    </tr>
+
+    <% @members.each do |member| %>
+      <tr>
+        <td><code><%= member %></code></td>
+        <td>
+          <form method="post"
+                action="<%= url("groups/#{@group}/members/#{member}/destroy") %>">
+            <button class="btn btn-small btn-danger">Remove from group</button>
+          </form>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

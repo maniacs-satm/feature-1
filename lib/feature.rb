@@ -2,6 +2,7 @@ module Feature
   autoload :Config, 'feature/config'
   autoload :RedisBackend, 'feature/redis_backend'
   autoload :Feature, 'feature/feature'
+  autoload :Dashboard, 'feature/dashboard'
 
   # Ads a value to be part of a group. This is useful at runtime to avoid having
   # to restart the application just to enable / disable a feature for a given
@@ -25,6 +26,11 @@ module Feature
   # your config if you want the changes to be permanent.
   def self.remove_from_group(name, value)
     backend.remove_from_group(name, value)
+  end
+
+  # Return an array of group member IDs
+  def self.get_group_members(group)
+    backend.get_group_members(group)
   end
 
   # Pass a block to configure, calling 'feature' for each feature you want to

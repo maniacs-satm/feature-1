@@ -12,8 +12,7 @@ $ gem install feature
 ## Usage
 
 It's written pretty generically, so we should be able to do quite a lot with
-it. Right now you can just turn features on and off globally, and the only
-included backend is for Redis.
+it. Right now the only included backend is for Redis.
 
 A Feature can be enabled globally or through groups. Group settings only apply
 when the feature is turned off globally. In other words, if the feature is
@@ -80,4 +79,17 @@ Feature.add_to_group(:employees, user.id)
 
 # Remove user from the 'employees' group
 Feature.remove_from_group(:employees, user.id)
+```
+
+## Dashboard
+
+The dashboard allows features to be globally enabled / disabled and for
+members to be added and removed from groups.
+
+![Feature dashboard](http://gc-misc.s3.amazonaws.com/images/feature-dashboard.png)
+
+To mount it in your Rails 3 app, add the following to your `routes.rb`
+
+```ruby
+mount Feature::Dashboard, :at => '/path/to/dashboard'
 ```
