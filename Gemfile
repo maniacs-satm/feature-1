@@ -5,6 +5,7 @@ gemspec
 group :development do
   gem "guard", "~> 0.8.8"
   gem "shotgun"
+  gem "rspec-extra-formatters"
   if RUBY_PLATFORM.downcase.include?("darwin")
     gem "guard-rspec", "~> 0.5.4"
     gem "rb-fsevent", "~> 0.9"
