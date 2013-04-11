@@ -4,3 +4,6 @@ test:
         environment:
           RAILS_ENV: test
           RACK_ENV: test
+notify:
+  webhooks:
+    - url: http://gc-hubot.herokuapp.com/hubot/ci_hook
