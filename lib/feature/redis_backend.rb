@@ -4,8 +4,15 @@ class Feature::RedisBackend
   attr_reader :redis
 
   def initialize(redis_connection, opts = {})
-    namespace = opts.fetch(:namespace, 'feature')
-    @redis = Redis::Namespace.new(namespace, redis: redis_connection)
+    case redis_connection
+    when Redis::Namespace
+      @redis = redis_connection
+    when Redis
+      namespace = opts.fetch(:namespace, 'feature')
+      @redis = Redis::Namespace.new(namespace, redis: redis_connection)
+    else
+      raise ArgumentError, "Invalid redis_connection: #{redis_connection.inspect}"
+    end
   end
 
   # Check if a feature is enabled. A feature enabled globally takes precedence.
