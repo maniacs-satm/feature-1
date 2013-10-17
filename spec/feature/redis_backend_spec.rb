@@ -9,6 +9,33 @@ describe Feature::RedisBackend do
 
   before { subject.reset! }
 
+  describe "#initialize" do
+    context "with a namespaced redis connection" do
+      subject do
+        ns = Redis::Namespace.new "ns", $redis
+        Feature::RedisBackend.new(ns)
+      end
+      it "uses the namespaced connection" do
+        redis.namespace.should == "ns"
+      end
+    end
+
+    context "with a redis connection" do
+      subject do
+        Feature::RedisBackend.new($redis, namespace: 'feature-test')
+      end
+      it "creates a new namespaced connection" do
+        redis.namespace.should == "feature-test"
+      end
+    end
+
+    context "with an invalid connection" do
+      it "raises an error" do
+        expect { Feature::RedisBackend.new(nil) }.to raise_error
+      end
+    end
+  end
+
   describe "#reset!" do
     it "clears out any set keys" do
       redis.set('foo', 'bar')
