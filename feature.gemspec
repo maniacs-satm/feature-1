@@ -1,7 +1,7 @@
 require File.expand_path('../lib/feature/version', __FILE__)
 
 Gem::Specification.new do |gem|
-  gem.name = 'feature'
+  gem.name = 'gc_feature'
   gem.version = Feature::VERSION.dup
   gem.authors = ['Harry Marr']
   gem.email = ['developers@gocardless.com']
