@@ -1,18 +1,16 @@
 # Feature
 
-A simple feature switching framework.
+A group based feature switching framework.
 
 ## Installation
 
 ```console
-# note: not on rubygems, so doesn't work yet...
 $ gem install feature
 ```
 
 ## Usage
 
-It's written pretty generically, so we should be able to do quite a lot with
-it. Right now the only included backend is for Redis.
+Feature groups and members are stored in a backend. Right now the only included backend is for Redis.
 
 A Feature can be enabled globally or through groups. Group settings only apply
 when the feature is turned off globally. In other words, if the feature is
@@ -20,56 +18,63 @@ enabled globally then the group settings are ignored.
 
 ### Defining Groups and Features
 
-Modify `config/initializers/feature.rb`, and add a call to `feature`, passing
-in the name of the feature as a symbol, and what you want the default to be.
-The default will be used when the feature hasn't been explicitly enabled or
-disabled.
+In Rails, modify `config/initializers/feature.rb`, and add a call to
+`feature`, passing in the name of the feature as a symbol, and what you want 
+the default to be. The default will be used when the feature hasn't been 
+explicitly enabled or disabled.
 
 ```ruby
 Feature.configure do
   backend Feature::RedisBackend.new(...)
 
-  feature :sepa_payments, default: false, groups: %w(beta_users employees)
+  feature :v2_design, default: false, groups: %w(beta_users employees)
 end
 ```
 
 ### Checking if a Feature is Enabled
 
-Call `Feature.enabled?` with the name of the feature:
+Calling `Feature(:feature_name)` will return a `Feature instance`. This can be 
+interrogated for its current state.
 
 ```ruby
-Feature(:sepa_payments).enabled?   # => false
+Feature(:v2_design).enabled?   # => false
 ```
 
-or to check if a feature is enabled for given value(2) (gets checked against
+Check if a feature is enabled for a given group member (gets checked against 
 the defined groups for the feature):
 
 ```ruby
-Feature(:sepa_payments).enabled_for?(current_user.id)
-# True if enabled for id-1 AND id-2
-Feature(:sepa_payments).enabled_for_all?(["id-1", "id-2"])
+Feature(:v2_design).enabled_for?(current_user.id)
 ```
 
-Check if a feature is enabled for any in a given array
+Check if a feature is enabled for ALL given group members:
+
+```ruby
+# True if enabled for id-1 AND id-2
+Feature(:v2_design).enabled_for_all?(["id-1", "id-2"])
+```
+
+Check if a feature is enabled for ANY in a given array
 
 ```ruby
 # True if enabled for id-1 or id-2
-Feature(:sepa_payments).enabled_for_any?(["id-1", "id-2"])
+Feature(:v2_design).enabled_for_any?(["id-1", "id-2"])
 ```
 
 ### Enabling and Disabling Features Globally
 
-Just call `enable` or `disable` with the name of the feature.
+Just call `enable` or `disable` on a `Feature`.
 
 ```ruby
-Feature(:sepa_payments).enable
-Feature(:sepa_payments).enabled?   # => true
-Feature(:sepa_payments).disable
-Feature(:sepa_payments).enabled?   # => false
+Feature(:v2_design).enable
+Feature(:v2_design).enabled?   # => true
+Feature(:v2_design).disable
+Feature(:v2_design).enabled?   # => false
 ```
-### Changing Groups membership during runtime
 
-It is possible to change a group membership state during runtime.
+### Changing Groups membership at runtime
+
+It is possible to change a group membership at during runtime.
 
 Examples from a Ruby irb session:
 
@@ -91,5 +96,5 @@ members to be added and removed from groups.
 To mount it in your Rails 3 app, add the following to your `routes.rb`
 
 ```ruby
-mount Feature::Dashboard, :at => '/path/to/dashboard'
+mount Feature::Dashboard, at: '/path/to/dashboard'
 ```
