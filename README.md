@@ -67,9 +67,9 @@ Just call `enable` or `disable` on a `Feature`.
 
 ```ruby
 Feature(:v2_design).enable
-Feature(:v2_design).enabled?   # => true
+Feature(:v2_design).enabled?  # => true
 Feature(:v2_design).disable
-Feature(:v2_design).enabled?   # => false
+Feature(:v2_design).enabled?  # => false
 ```
 
 ### Changing Groups membership at runtime
