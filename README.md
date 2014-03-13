@@ -1,4 +1,6 @@
 # Feature
+[![Gem Version](https://badge.fury.io/rb/gc_feature.png)](http://badge.fury.io/rb/gc_feature)
+[![Build Status](https://travis-ci.org/gocardless/feature.png?branch=master)](https://travis-ci.org/gocardless/feature)
 
 A group based feature switching framework.
 
