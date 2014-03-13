@@ -1,6 +1,6 @@
 rvm:
   - 2.0.0
   - 1.9.3
-services: redis
+services: redis-server
 script:
  - bundle exec rspec
