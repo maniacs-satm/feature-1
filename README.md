@@ -7,7 +7,7 @@ A group based feature switching framework.
 ## Installation
 
 ```console
-$ gem install feature
+$ gem install gc_feature
 ```
 
 ## Usage
